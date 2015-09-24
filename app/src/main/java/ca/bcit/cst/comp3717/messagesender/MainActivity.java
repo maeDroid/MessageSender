@@ -1,7 +1,6 @@
 package ca.bcit.cst.comp3717.messagesender;
 
 
-import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,12 +13,15 @@ import android.widget.EditText;
 public class MainActivity
         extends AppCompatActivity
 {
+    public static final int UPPERCASE_REQUEST = 1;
+    private EditText messageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        messageView = (EditText)findViewById(R.id.message_text);
     }
 
     @Override
@@ -50,14 +52,29 @@ public class MainActivity
 
     public void sendMessage(final View view)
     {
-        final EditText messageView;
-        final String   message;
-        final Intent   intent;
+        final String message;
+        final Intent intent;
 
-        messageView = (EditText)findViewById(R.id.message_text);
         message     = messageView.getText().toString();
-        intent      = new Intent(Intent.ACTION_WEB_SEARCH);
-        intent.putExtra(SearchManager.QUERY, message);
-        startActivity(intent);
+        intent      = new Intent(this, ReceiveMessageActivity.class);
+        intent.putExtra(ReceiveMessageActivity.MESSAGE_EXTRA, message);
+        startActivityForResult(intent, UPPERCASE_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(final int    requestCode,
+                                    final int    resultCode,
+                                    final Intent data)
+    {
+        if(requestCode == UPPERCASE_REQUEST)
+        {
+            if(resultCode == RESULT_OK)
+            {
+                final String message;
+
+                message = data.getStringExtra("result");
+                messageView.setText(message);
+            }
+        }
     }
 }

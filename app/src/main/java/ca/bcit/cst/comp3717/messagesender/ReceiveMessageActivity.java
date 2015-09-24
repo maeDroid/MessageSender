@@ -6,21 +6,21 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 
 public class ReceiveMessageActivity
         extends AppCompatActivity
 {
-
     public static final String MESSAGE_EXTRA = "message";
+    private TextView messageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         final Intent   intent;
         final String   message;
-        final TextView messageView;
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_receive_message);
@@ -54,5 +54,17 @@ public class ReceiveMessageActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void uppercase(final View view)
+    {
+        final Intent returnIntent;
+        final String message;
+
+        returnIntent = new Intent();
+        message      = messageView.getText().toString();
+        returnIntent.putExtra("result", message.toUpperCase());
+        setResult(RESULT_OK, returnIntent);
+        finish();
     }
 }
